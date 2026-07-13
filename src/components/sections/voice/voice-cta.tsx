@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { siteConfig } from "@/lib/site";
 
-export function CTA() {
+export function VoiceCTA() {
   return (
     <section className="relative py-20 md:py-32">
       <div className="mx-auto max-w-6xl px-6">
@@ -11,16 +11,22 @@ export function CTA() {
           </div>
 
           <div className="relative">
+            <p className="mb-4 text-sm font-medium tracking-widest text-accent uppercase">
+              Seriqon Voice™
+            </p>
             <h2 className="font-display text-3xl font-semibold tracking-tight text-foreground md:text-5xl lg:text-6xl">
-              Ready to reclaim your time?
+              Stop losing leads to missed calls
             </h2>
             <p className="mx-auto mt-4 max-w-xl text-lg text-muted">
-              Book your free Time Recovery Audit and discover how much time your
-              team could save. {siteConfig.philosophy}
+              Book your free Time Recovery Audit and see how Seriqon Voice™ can
+              capture every opportunity. {siteConfig.philosophy}
             </p>
-            <div className="mt-10">
+            <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
               <Button href="/book" size="lg">
                 Book Your Time Recovery Audit
+              </Button>
+              <Button href="#demo" variant="secondary" size="lg">
+                See How It Works
               </Button>
             </div>
           </div>

@@ -65,7 +65,7 @@ export function Navbar() {
         </div>
 
         <div className="hidden md:block">
-          <Button href="#contact" size="sm">
+          <Button href="/book" size="sm">
             Book Your Time Recovery Audit
           </Button>
         </div>
@@ -121,7 +121,7 @@ export function Navbar() {
             </a>
           ))}
           <Button
-            href="#contact"
+            href="/book"
             size="lg"
             onClick={() => setIsOpen(false)}
           >

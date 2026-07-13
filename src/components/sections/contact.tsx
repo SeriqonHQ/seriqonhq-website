@@ -142,9 +142,14 @@ export function Contact() {
                   placeholder="Tell us about your biggest time drains..."
                 />
               </div>
-              <Button type="submit" size="lg" className="w-full">
-                Book Your Time Recovery Audit
-              </Button>
+              <div className="flex flex-col gap-3">
+                <Button href="/book" size="lg" className="w-full">
+                  Book Your Time Recovery Audit
+                </Button>
+                <Button type="submit" variant="secondary" size="lg" className="w-full">
+                  Send Message
+                </Button>
+              </div>
             </form>
           )}
         </div>

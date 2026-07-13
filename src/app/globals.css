@@ -15,6 +15,7 @@
   --color-accent: #6366f1;
   --color-accent-light: #818cf8;
   --color-accent-glow: rgba(99, 102, 241, 0.15);
+  --color-primary: #6366f1;
 
   --animate-fade-in: fade-in 0.6s ease-out forwards;
   --animate-fade-in-up: fade-in-up 0.7s ease-out forwards;
@@ -111,6 +112,25 @@ body {
   mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 20%, transparent 70%);
 }
 
+.kpi-recovery-grid {
+  background-image: linear-gradient(
+      rgba(99, 102, 241, 0.06) 1px,
+      transparent 1px
+    ),
+    linear-gradient(90deg, rgba(99, 102, 241, 0.06) 1px, transparent 1px);
+  background-size: 32px 32px;
+  animation: kpi-grid-drift 24s linear infinite;
+}
+
+@keyframes kpi-grid-drift {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 32px 32px;
+  }
+}
+
 .stagger-1 {
   animation-delay: 0.1s;
 }
@@ -123,6 +143,89 @@ body {
 .stagger-4 {
   animation-delay: 0.4s;
 }
+@keyframes workflow-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(99, 102, 241, 0);
+  }
+}
+
+@keyframes workflow-flow {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.workflow-step-active {
+  animation: workflow-pulse 2s ease-in-out infinite;
+}
+
+.workflow-line::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  height: 2px;
+  width: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--color-accent),
+    transparent
+  );
+  animation: workflow-flow 2s linear infinite;
+}
+
+.calculator-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 6px;
+  border-radius: 9999px;
+  background: transparent;
+  outline: none;
+  position: relative;
+  z-index: 1;
+}
+
+.calculator-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #6366f1;
+  cursor: pointer;
+  box-shadow: 0 0 12px rgba(99, 102, 241, 0.5);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.calculator-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 20px rgba(99, 102, 241, 0.7);
+}
+
+.calculator-slider::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border: none;
+  border-radius: 50%;
+  background: #6366f1;
+  cursor: pointer;
+  box-shadow: 0 0 12px rgba(99, 102, 241, 0.5);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.calculator-slider::-moz-range-thumb:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 20px rgba(99, 102, 241, 0.7);
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

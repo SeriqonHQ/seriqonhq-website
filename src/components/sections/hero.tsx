@@ -31,7 +31,7 @@ export function Hero() {
 
           <div className="animate-fade-in-up stagger-3 mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <div className="flex flex-col items-center">
-              <Button href="#contact" size="lg">
+              <Button href="/book" size="lg">
                 Get Your Time Back
               </Button>
               <p className="mt-2 text-sm text-muted-foreground">

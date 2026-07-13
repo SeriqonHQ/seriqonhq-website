@@ -1,6 +1,9 @@
 import { Inter } from "next/font/google";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
+import { FloatingCtaShell } from "@/components/layout/floating-cta-shell";
+import { GoogleAnalytics } from "@/components/analytics/google-analytics";
+import { AnalyticsTracker } from "@/components/analytics/analytics-tracker";
 import { metadata, siteConfig } from "@/lib/site";
 import "./globals.css";
 
@@ -36,9 +39,13 @@ export default function RootLayout({
         >
           Skip to main content
         </a>
-        <Navbar />
-        <main id="main-content">{children}</main>
-        <Footer />
+        <GoogleAnalytics />
+        <FloatingCtaShell>
+          <Navbar />
+          <main id="main-content">{children}</main>
+          <Footer />
+          <AnalyticsTracker />
+        </FloatingCtaShell>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
