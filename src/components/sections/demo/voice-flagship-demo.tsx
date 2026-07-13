@@ -294,10 +294,10 @@ export function VoiceFlagshipDemo() {
           </h2>
           <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <Button href="/audit" size="lg">
-              Book My Time Recovery Audit
+              Take Time Recovery Audit
             </Button>
-            <Button href="/voice" variant="secondary" size="lg">
-              Back to Seriqon Voice
+            <Button href="/book" variant="secondary" size="lg">
+              Book Time Recovery Audit
             </Button>
           </div>
         </div>

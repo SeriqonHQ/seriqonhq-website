@@ -17,7 +17,7 @@ export function SecurityCTA() {
               Ready to see Seriqon Voice in action?
             </h2>
             <div className="mt-10 flex flex-col items-center justify-center">
-              <Button href="/audit" size="lg">
+              <Button href="/book" size="lg">
                 Book My Time Recovery Audit
               </Button>
             </div>

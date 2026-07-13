@@ -22,11 +22,11 @@ export function VoiceCTA() {
               capture every opportunity. {siteConfig.philosophy}
             </p>
             <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
-              <Button href="/book" size="lg">
-                Book Your Time Recovery Audit
+              <Button href="/demo" size="lg">
+                Try Live Demo
               </Button>
-              <Button href="#demo" variant="secondary" size="lg">
-                See How It Works
+              <Button href="/audit" variant="secondary" size="lg">
+                Take Time Recovery Audit
               </Button>
             </div>
           </div>

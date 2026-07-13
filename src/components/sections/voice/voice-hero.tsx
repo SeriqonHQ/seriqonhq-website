@@ -28,11 +28,11 @@ export function VoiceHero() {
             </p>
 
             <div className="animate-fade-in-up stagger-3 mt-10 flex flex-col gap-4 sm:flex-row">
-              <Button href="/book" size="lg">
-                Book Your Time Recovery Audit
+              <Button href="/demo" size="lg">
+                Try Live Demo
               </Button>
-              <Button href="#demo" variant="secondary" size="lg">
-                See How It Works
+              <Button href="/audit" variant="secondary" size="lg">
+                Take Time Recovery Audit
               </Button>
             </div>
           </div>

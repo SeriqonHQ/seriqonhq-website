@@ -30,16 +30,11 @@ export function Hero() {
           </p>
 
           <div className="animate-fade-in-up stagger-3 mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
-            <div className="flex flex-col items-center">
-              <Button href="/book" size="lg">
-                Get Your Time Back
-              </Button>
-              <p className="mt-2 text-sm text-muted-foreground">
-                Free 30-minute Time Recovery Audit
-              </p>
-            </div>
-            <Button href="#services" variant="secondary" size="lg">
-              Explore Services
+            <Button href="/voice" size="lg">
+              Learn About Seriqon Voice
+            </Button>
+            <Button href="/demo" variant="secondary" size="lg">
+              Try Live Demo
             </Button>
           </div>
 

@@ -8,7 +8,6 @@ import { ScoreRing } from "@/components/audit/score-ring";
 import {
   formatCompactMoney,
   formatCurrency,
-  formatRecoveryCTA,
 } from "@/lib/audit/calculations";
 import { generateAuditPdf } from "@/lib/audit/generate-pdf";
 import { INDUSTRIES } from "@/lib/audit/constants";
@@ -65,7 +64,6 @@ export function AuditReportView({
 }: AuditReportViewProps) {
   const industryLabel =
     INDUSTRIES.find((item) => item.id === data.industry)?.label ?? data.industry;
-  const ctaLabel = formatRecoveryCTA(report.metrics.recoverableRevenue);
 
   return (
     <div className="mx-auto w-full max-w-4xl">
@@ -246,10 +244,10 @@ export function AuditReportView({
           </h3>
           <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <Button href="/book" size="lg">
-              {ctaLabel}
+              Book My Time Recovery Audit
             </Button>
-            <Button href="/voice#demo" variant="secondary" size="lg">
-              See Seriqon Voice™ Demo
+            <Button href="/demo" variant="secondary" size="lg">
+              Watch Seriqon Voice Live Demo
             </Button>
           </div>
           <p className="mt-6 text-sm text-muted-foreground">

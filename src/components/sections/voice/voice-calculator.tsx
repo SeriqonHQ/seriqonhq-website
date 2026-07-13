@@ -109,10 +109,6 @@ function formatMoneyDisplay(value: number, compact = true): string {
   }).format(rounded);
 }
 
-function formatRecoveryCTA(value: number): string {
-  return `Recover My ${formatMoneyDisplay(value)}`;
-}
-
 function easeOutCubic(t: number, b: number, c: number, d: number): number {
   const progress = t / d - 1;
   return c * (progress * progress * progress + 1) + b;
@@ -483,10 +479,6 @@ export function VoiceCalculator() {
     () => getRiskTier(results.annualAtRisk),
     [results.annualAtRisk]
   );
-  const ctaLabel = useMemo(
-    () => formatRecoveryCTA(results.annualRecovery),
-    [results.annualRecovery]
-  );
 
   return (
     <section
@@ -638,11 +630,11 @@ export function VoiceCalculator() {
               opportunities, and free your team to focus on what matters most.
             </p>
             <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
-              <Button href="/book" size="lg">
-                {ctaLabel}
+              <Button href="/audit" size="lg">
+                Take Time Recovery Audit
               </Button>
-              <Button href="#demo" variant="secondary" size="lg">
-                See Seriqon Voice™ Demo
+              <Button href="/demo" variant="secondary" size="lg">
+                Try Live Demo
               </Button>
             </div>
           </div>

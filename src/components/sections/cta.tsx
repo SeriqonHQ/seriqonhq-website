@@ -18,9 +18,12 @@ export function CTA() {
               Book your free Time Recovery Audit and discover how much time your
               team could save. {siteConfig.philosophy}
             </p>
-            <div className="mt-10">
-              <Button href="/book" size="lg">
-                Book Your Time Recovery Audit
+            <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
+              <Button href="/demo" size="lg">
+                Try Live Demo
+              </Button>
+              <Button href="/audit" variant="secondary" size="lg">
+                Take Time Recovery Audit
               </Button>
             </div>
           </div>
