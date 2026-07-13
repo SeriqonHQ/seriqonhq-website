@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import { Logo } from "@/components/logo";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -43,13 +44,13 @@ export function Navbar() {
         className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6 md:h-20"
         aria-label="Main navigation"
       >
-        <a
+        <Link
           href="/"
           className="relative z-50 transition-opacity hover:opacity-80"
           aria-label="Seriqon, return to homepage"
         >
           <Logo />
-        </a>
+        </Link>
 
         <div className="hidden items-center gap-8 md:flex">
           {navLinks.map((link) => (

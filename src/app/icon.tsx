@@ -1,27 +1,28 @@
-export default function Icon() {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 32 32"
-      fill="none"
-      role="img"
-      aria-label="Seriqon"
-    >
-      <rect width="32" height="32" rx="8" fill="#050505" />
-      <text
-        x="16"
-        y="21"
-        textAnchor="middle"
-        fill="#fafafa"
-        fontSize="11"
-        fontWeight="600"
-        fontFamily="system-ui, sans-serif"
-      >
-        S
-      </text>
-    </svg>
-  );
-}
+import { ImageResponse } from "next/og";
 
 export const size = { width: 32, height: 32 };
-export const contentType = "image/svg+xml";
+export const contentType = "image/png";
+
+export default function Icon() {
+  return new ImageResponse(
+    (
+      <div
+        style={{
+          fontSize: 18,
+          background: "#050505",
+          width: "100%",
+          height: "100%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          color: "#fafafa",
+          borderRadius: 8,
+          fontWeight: 600,
+        }}
+      >
+        S
+      </div>
+    ),
+    { ...size }
+  );
+}

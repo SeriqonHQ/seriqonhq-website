@@ -46,10 +46,9 @@ export function Button({
   );
 
   if ("href" in props && props.href) {
-    const { href, variant: _, size: __, ...anchorProps } = props;
+    const { href, ...anchorProps } = props;
     return <a href={href} className={classes} {...anchorProps} />;
   }
 
-  const { variant: _, size: __, ...buttonProps } = props as ButtonAsButton;
-  return <button className={classes} {...buttonProps} />;
+  return <button className={classes} {...(props as ButtonAsButton)} />;
 }
