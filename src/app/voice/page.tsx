@@ -1,14 +1,6 @@
 import type { Metadata } from "next";
 import { siteConfig } from "@/lib/site";
-import { VoiceHero } from "@/components/sections/voice/voice-hero";
-import { VoiceProblem } from "@/components/sections/voice/voice-problem";
-import { VoiceCalculator } from "@/components/sections/voice/voice-calculator";
-import { VoiceWorkflow } from "@/components/sections/voice/voice-workflow";
-import { VoiceDemo } from "@/components/sections/voice/voice-demo";
-import { VoiceBenefits } from "@/components/sections/voice/voice-benefits";
-import { VoiceIndustries } from "@/components/sections/voice/voice-industries";
-import { VoiceFAQ } from "@/components/sections/voice/voice-faq";
-import { VoiceCTA } from "@/components/sections/voice/voice-cta";
+import { VoicePageClient } from "@/components/sections/voice/voice-page-client";
 
 const description =
   "Seriqon Voice™ instantly engages missed callers, qualifies leads, and notifies your team—so every conversation continues, even when you can't answer.";
@@ -53,15 +45,7 @@ const productSchema = {
 export default function VoicePage() {
   return (
     <>
-      <VoiceHero />
-      <VoiceCalculator />
-      <VoiceDemo />
-      <VoiceProblem />
-      <VoiceWorkflow />
-      <VoiceBenefits />
-      <VoiceIndustries />
-      <VoiceFAQ />
-      <VoiceCTA />
+      <VoicePageClient />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{

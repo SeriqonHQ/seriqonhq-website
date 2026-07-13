@@ -6,7 +6,7 @@ const quickLinks = [
   { href: "/", label: "Home" },
   { href: "/voice", label: "Seriqon Voice" },
   { href: "/demo", label: "Live Demo" },
-  { href: "/audit", label: "Time Recovery Audit" },
+  { href: "/audit", label: "ROI Calculator" },
   { href: "/security", label: "Security" },
   { href: "/book", label: "Book Audit" },
 ];

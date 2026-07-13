@@ -123,3 +123,22 @@ export function sleep(ms: number): Promise<void> {
     window.setTimeout(resolve, ms);
   });
 }
+
+export function getCompletedDemoState() {
+  const visibleCards: DashboardCardId[] = [];
+
+  demoMessages.forEach((message) => {
+    message.revealCards?.forEach((cardId) => {
+      if (!visibleCards.includes(cardId)) {
+        visibleCards.push(cardId);
+      }
+    });
+  });
+
+  return {
+    visibleCount: demoMessages.length,
+    visibleCards,
+    showSummary: true,
+    isComplete: true,
+  };
+}

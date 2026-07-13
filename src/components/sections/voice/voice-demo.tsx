@@ -1,9 +1,14 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Section } from "@/components/ui/section";
-import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import {
+  hasIntroPlayed,
+  markIntroPlayed,
+  VOICE_INTRO_PLAYED_KEY,
+} from "@/lib/intro-session";
 
 type Message = {
   id: number;
@@ -50,33 +55,71 @@ const conversation: Message[] = [
 ];
 
 const MESSAGE_DELAY = 1800;
+const COMPLETED_COUNT = conversation.length;
 
-export function VoiceDemo() {
+interface VoiceDemoProps {
+  playKey?: number;
+}
+
+export function VoiceDemo({ playKey = 0 }: VoiceDemoProps) {
   const [visibleCount, setVisibleCount] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [showTyping, setShowTyping] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
-  const hasAutoPlayed = useRef(false);
+  const [isInstant, setIsInstant] = useState(false);
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
+  const timersRef = useRef<number[]>([]);
 
-  const reset = useCallback(() => {
-    setVisibleCount(0);
-    setShowTyping(false);
-    setIsPlaying(false);
+  const clearTimers = useCallback(() => {
+    timersRef.current.forEach((timer) => window.clearTimeout(timer));
+    timersRef.current = [];
   }, []);
 
-  const play = useCallback(() => {
-    reset();
+  const scrollConversationToBottom = useCallback(() => {
+    const container = messagesContainerRef.current;
+    if (!container) return;
+    container.scrollTop = container.scrollHeight;
+  }, []);
+
+  const showCompletedState = useCallback(() => {
+    clearTimers();
+    setIsInstant(true);
+    setShowTyping(false);
+    setIsPlaying(false);
+    setVisibleCount(COMPLETED_COUNT);
+  }, [clearTimers]);
+
+  const startPlayback = useCallback(() => {
+    clearTimers();
+    setIsInstant(false);
+    setShowTyping(false);
     setIsPlaying(true);
     setVisibleCount(1);
-  }, [reset]);
+  }, [clearTimers]);
+
+  useEffect(() => {
+    clearTimers();
+
+    if (playKey > 0) {
+      startPlayback();
+      return clearTimers;
+    }
+
+    if (hasIntroPlayed(VOICE_INTRO_PLAYED_KEY)) {
+      showCompletedState();
+      return clearTimers;
+    }
+
+    startPlayback();
+    return clearTimers;
+  }, [playKey, clearTimers, showCompletedState, startPlayback]);
 
   useEffect(() => {
     if (!isPlaying || visibleCount === 0) return;
 
-    if (visibleCount >= conversation.length) {
+    if (visibleCount >= COMPLETED_COUNT) {
       setIsPlaying(false);
       setShowTyping(false);
+      markIntroPlayed(VOICE_INTRO_PLAYED_KEY);
       return;
     }
 
@@ -89,35 +132,22 @@ export function VoiceDemo() {
 
     const delay = isAiReply ? MESSAGE_DELAY + 800 : MESSAGE_DELAY;
 
-    const timer = setTimeout(() => {
+    const timer = window.setTimeout(() => {
       setShowTyping(false);
       setVisibleCount((prev) => prev + 1);
     }, delay);
 
-    return () => clearTimeout(timer);
+    timersRef.current.push(timer);
+
+    return () => {
+      window.clearTimeout(timer);
+      timersRef.current = timersRef.current.filter((item) => item !== timer);
+    };
   }, [isPlaying, visibleCount]);
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [visibleCount, showTyping]);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting && !hasAutoPlayed.current) {
-          hasAutoPlayed.current = true;
-          play();
-        }
-      },
-      { threshold: 0.3 }
-    );
-
-    if (containerRef.current) {
-      observer.observe(containerRef.current);
-    }
-
-    return () => observer.disconnect();
-  }, [play]);
+    scrollConversationToBottom();
+  }, [visibleCount, showTyping, scrollConversationToBottom]);
 
   const visibleMessages = conversation.slice(0, visibleCount);
 
@@ -129,7 +159,7 @@ export function VoiceDemo() {
       description="Watch how a missed call becomes a qualified lead—in under 60 seconds."
       centered={false}
     >
-      <div ref={containerRef} className="grid items-start gap-12 lg:grid-cols-2">
+      <div className="grid items-start gap-12 lg:grid-cols-2">
         <div className="order-2 lg:order-1">
           <div className="space-y-6">
             <div className="flex items-start gap-4">
@@ -166,12 +196,6 @@ export function VoiceDemo() {
               </div>
             </div>
           </div>
-
-          <div className="mt-8">
-            <Button onClick={play} variant="secondary" size="md">
-              {isPlaying ? "Replaying..." : "Replay Conversation"}
-            </Button>
-          </div>
         </div>
 
         <div className="order-1 lg:order-2">
@@ -195,49 +219,57 @@ export function VoiceDemo() {
                 </div>
 
                 <div
+                  ref={messagesContainerRef}
                   className="flex h-[420px] flex-col gap-3 overflow-y-auto px-4 py-4"
                   aria-live="polite"
                   aria-label="Simulated conversation"
                 >
-                  {visibleMessages.map((message) => (
-                    <div
-                      key={message.id}
-                      className={cn(
-                        "animate-fade-in-up",
-                        message.sender === "customer" && "flex justify-end",
-                        message.sender === "system" && "flex justify-center"
-                      )}
-                    >
-                      {message.sender === "system" ? (
-                        <p className="rounded-full bg-accent/10 px-4 py-1.5 text-xs font-medium text-accent">
-                          {message.text}
-                        </p>
-                      ) : (
-                        <div
-                          className={cn(
-                            "max-w-[85%] rounded-2xl px-4 py-3 text-sm",
-                            message.sender === "ai"
-                              ? "rounded-tl-sm bg-accent/20 text-foreground"
-                              : "rounded-tr-sm bg-surface text-muted"
-                          )}
-                        >
-                          {message.text}
-                        </div>
-                      )}
-                    </div>
-                  ))}
+                  <AnimatePresence initial={false}>
+                    {visibleMessages.map((message) => (
+                      <motion.div
+                        key={`${playKey}-${message.id}`}
+                        initial={isInstant ? false : { opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.35, ease: "easeOut" }}
+                        className={cn(
+                          message.sender === "customer" && "flex justify-end",
+                          message.sender === "system" && "flex justify-center"
+                        )}
+                      >
+                        {message.sender === "system" ? (
+                          <p className="rounded-full bg-accent/10 px-4 py-1.5 text-xs font-medium text-accent">
+                            {message.text}
+                          </p>
+                        ) : (
+                          <div
+                            className={cn(
+                              "max-w-[85%] rounded-2xl px-4 py-3 text-sm",
+                              message.sender === "ai"
+                                ? "rounded-tl-sm bg-accent/20 text-foreground"
+                                : "rounded-tr-sm bg-surface text-muted"
+                            )}
+                          >
+                            {message.text}
+                          </div>
+                        )}
+                      </motion.div>
+                    ))}
+                  </AnimatePresence>
 
-                  {showTyping && (
-                    <div className="flex items-center gap-2 px-2">
+                  {showTyping ? (
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      className="flex items-center gap-2 px-2"
+                    >
                       <div className="flex gap-1 rounded-2xl rounded-tl-sm bg-accent/20 px-4 py-3">
                         <span className="h-2 w-2 animate-pulse rounded-full bg-accent" />
                         <span className="h-2 w-2 animate-pulse rounded-full bg-accent [animation-delay:150ms]" />
                         <span className="h-2 w-2 animate-pulse rounded-full bg-accent [animation-delay:300ms]" />
                       </div>
-                    </div>
-                  )}
-
-                  <div ref={messagesEndRef} />
+                    </motion.div>
+                  ) : null}
                 </div>
               </div>
             </div>

@@ -1,17 +1,23 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Phone, Radio } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { trackDemoCompleted } from "@/lib/analytics/events";
+import {
+  hasIntroPlayed,
+  markIntroPlayed,
+  DEMO_INTRO_PLAYED_KEY,
+} from "@/lib/intro-session";
 import { cn } from "@/lib/utils";
 import {
   dashboardCardContent,
   dashboardCardOrder,
   demoMessages,
   executiveSummary,
+  getCompletedDemoState,
   sleep,
   type DashboardCardId,
 } from "@/lib/demo/timeline";
@@ -19,20 +25,25 @@ import {
 function DashboardCard({
   cardId,
   index,
+  playKey,
+  instant,
 }: {
   cardId: DashboardCardId;
   index: number;
+  playKey: number;
+  instant: boolean;
 }) {
   const card = dashboardCardContent[cardId];
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 14, scale: 0.98 }}
+      key={`${playKey}-${cardId}`}
+      initial={instant ? false : { opacity: 0, y: 14, scale: 0.98 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{
         duration: 0.45,
         ease: "easeOut",
-        delay: index * 0.08,
+        delay: instant ? 0 : index * 0.08,
       }}
     >
       <Card hover={false} className="p-5">
@@ -63,16 +74,53 @@ function DashboardCard({
   );
 }
 
-export function VoiceFlagshipDemo() {
+interface VoiceFlagshipDemoProps {
+  playKey?: number;
+}
+
+export function VoiceFlagshipDemo({ playKey = 0 }: VoiceFlagshipDemoProps) {
+  const completedState = getCompletedDemoState();
   const [visibleCount, setVisibleCount] = useState(0);
   const [visibleCards, setVisibleCards] = useState<DashboardCardId[]>([]);
   const [showTyping, setShowTyping] = useState(false);
   const [showSummary, setShowSummary] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const [isInstant, setIsInstant] = useState(false);
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
+  const completionTrackedRef = useRef(false);
+
+  const scrollConversationToBottom = useCallback(() => {
+    const container = messagesContainerRef.current;
+    if (!container) return;
+    container.scrollTop = container.scrollHeight;
+  }, []);
+
+  const applyCompletedState = useCallback(() => {
+    setIsInstant(true);
+    setShowTyping(false);
+    setVisibleCount(completedState.visibleCount);
+    setVisibleCards(completedState.visibleCards);
+    setShowSummary(completedState.showSummary);
+    setIsComplete(completedState.isComplete);
+  }, [completedState]);
+
+  const resetDemoState = useCallback(() => {
+    setIsInstant(false);
+    setVisibleCount(0);
+    setVisibleCards([]);
+    setShowTyping(false);
+    setShowSummary(false);
+    setIsComplete(false);
+    completionTrackedRef.current = false;
+  }, []);
 
   useEffect(() => {
+    if (playKey === 0 && hasIntroPlayed(DEMO_INTRO_PLAYED_KEY)) {
+      return;
+    }
+
     let active = true;
+    resetDemoState();
 
     const runDemo = async () => {
       for (const message of demoMessages) {
@@ -103,24 +151,38 @@ export function VoiceFlagshipDemo() {
 
       if (!active) return;
       setIsComplete(true);
+      markIntroPlayed(DEMO_INTRO_PLAYED_KEY);
       await sleep(400);
       if (!active) return;
       setShowSummary(true);
     };
 
-    void runDemo();
+    if (playKey > 0 || !hasIntroPlayed(DEMO_INTRO_PLAYED_KEY)) {
+      void runDemo();
+    }
 
     return () => {
       active = false;
     };
-  }, []);
+  }, [playKey, resetDemoState]);
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [visibleCount, showTyping]);
+    if (playKey > 0) {
+      return;
+    }
+
+    if (hasIntroPlayed(DEMO_INTRO_PLAYED_KEY)) {
+      applyCompletedState();
+    }
+  }, [playKey, applyCompletedState]);
 
   useEffect(() => {
-    if (isComplete) {
+    scrollConversationToBottom();
+  }, [visibleCount, showTyping, scrollConversationToBottom]);
+
+  useEffect(() => {
+    if (isComplete && !completionTrackedRef.current) {
+      completionTrackedRef.current = true;
       trackDemoCompleted();
     }
   }, [isComplete]);
@@ -161,6 +223,7 @@ export function VoiceFlagshipDemo() {
                 </div>
 
                 <div
+                  ref={messagesContainerRef}
                   className="flex h-[420px] flex-col gap-3 overflow-y-auto px-4 py-4"
                   aria-live="polite"
                   aria-label="Simulated phone conversation"
@@ -168,8 +231,8 @@ export function VoiceFlagshipDemo() {
                   <AnimatePresence initial={false}>
                     {visibleMessages.map((message) => (
                       <motion.div
-                        key={message.id}
-                        initial={{ opacity: 0, y: 10 }}
+                        key={`${playKey}-${message.id}`}
+                        initial={isInstant ? false : { opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.35, ease: "easeOut" }}
                         className={cn(
@@ -211,8 +274,6 @@ export function VoiceFlagshipDemo() {
                       </div>
                     </motion.div>
                   ) : null}
-
-                  <div ref={messagesEndRef} />
                 </div>
               </div>
             </div>
@@ -241,7 +302,13 @@ export function VoiceFlagshipDemo() {
               {dashboardCardOrder
                 .filter((cardId) => visibleCards.includes(cardId))
                 .map((cardId, index) => (
-                  <DashboardCard key={cardId} cardId={cardId} index={index} />
+                  <DashboardCard
+                    key={`${playKey}-${cardId}`}
+                    cardId={cardId}
+                    index={index}
+                    playKey={playKey}
+                    instant={isInstant}
+                  />
                 ))}
             </AnimatePresence>
           </div>
@@ -265,7 +332,7 @@ export function VoiceFlagshipDemo() {
       <AnimatePresence>
         {showSummary ? (
           <motion.div
-            initial={{ opacity: 0, y: 16 }}
+            initial={isInstant ? false : { opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.55, ease: "easeOut" }}
           >
@@ -281,12 +348,7 @@ export function VoiceFlagshipDemo() {
         ) : null}
       </AnimatePresence>
 
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.3, duration: 0.55, ease: "easeOut" }}
-        className="relative overflow-hidden rounded-3xl border border-border bg-surface px-8 py-12 text-center md:px-12 md:py-16"
-      >
+      <div className="relative overflow-hidden rounded-3xl border border-border bg-surface px-8 py-12 text-center md:px-12 md:py-16">
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-accent/5 via-transparent to-transparent" />
         <div className="relative">
           <h2 className="font-display text-3xl font-semibold tracking-tight text-foreground md:text-4xl">
@@ -301,7 +363,7 @@ export function VoiceFlagshipDemo() {
             </Button>
           </div>
         </div>
-      </motion.div>
+      </div>
     </div>
   );
 }
