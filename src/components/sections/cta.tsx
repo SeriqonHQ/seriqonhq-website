@@ -1,0 +1,31 @@
+import { Button } from "@/components/ui/button";
+import { siteConfig } from "@/lib/site";
+
+export function CTA() {
+  return (
+    <section className="relative py-20 md:py-32">
+      <div className="mx-auto max-w-6xl px-6">
+        <div className="relative overflow-hidden rounded-3xl border border-border bg-surface px-8 py-16 text-center md:px-16 md:py-24">
+          <div className="pointer-events-none absolute inset-0">
+            <div className="gradient-accent absolute -top-1/2 left-1/2 h-full w-full -translate-x-1/2 opacity-10 blur-3xl" />
+          </div>
+
+          <div className="relative">
+            <h2 className="font-display text-3xl font-semibold tracking-tight text-foreground md:text-5xl lg:text-6xl">
+              Ready to reclaim your time?
+            </h2>
+            <p className="mx-auto mt-4 max-w-xl text-lg text-muted">
+              Book your free Time Recovery Audit and discover how much time your
+              team could save. {siteConfig.philosophy}
+            </p>
+            <div className="mt-10">
+              <Button href="#contact" size="lg">
+                Book Your Time Recovery Audit
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
