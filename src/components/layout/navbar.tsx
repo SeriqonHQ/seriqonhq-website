@@ -11,7 +11,8 @@ const navLinks = [
   { href: "/", label: "Home" },
   { href: "/voice", label: "Seriqon Voice" },
   { href: "/demo", label: "Live Demo" },
-  { href: "/audit", label: "ROI Calculator" },
+  { href: "/roi-calculator", label: "ROI Calculator" },
+  { href: "/time-recovery-audit", label: "Time Recovery Audit" },
   { href: "/security", label: "Security" },
 ] as const;
 

@@ -19,10 +19,10 @@ export function CTA() {
               team could save. {siteConfig.philosophy}
             </p>
             <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
-              <Button href="/demo" size="lg">
-                Try Live Demo
+              <Button href="/roi-calculator" size="lg">
+                Calculate Your ROI
               </Button>
-              <Button href="/audit" variant="secondary" size="lg">
+              <Button href="/time-recovery-audit" variant="secondary" size="lg">
                 Take Time Recovery Audit
               </Button>
             </div>

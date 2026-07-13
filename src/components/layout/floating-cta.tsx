@@ -29,7 +29,7 @@ export function FloatingCta() {
   const shouldHide =
     pathname === "/book" ||
     pathname === "/admin" ||
-    (pathname === "/audit" &&
+    (pathname === "/time-recovery-audit" &&
       (auditPhase === "form" || auditPhase === "analyzing"));
 
   const isVisible = isScrolled && !shouldHide;

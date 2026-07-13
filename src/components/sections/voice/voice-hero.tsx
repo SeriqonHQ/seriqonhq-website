@@ -31,7 +31,7 @@ export function VoiceHero() {
               <Button href="/demo" size="lg">
                 Try Live Demo
               </Button>
-              <Button href="/audit" variant="secondary" size="lg">
+              <Button href="/time-recovery-audit" variant="secondary" size="lg">
                 Take Time Recovery Audit
               </Button>
             </div>

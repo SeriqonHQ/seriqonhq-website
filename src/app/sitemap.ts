@@ -22,7 +22,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.9,
     },
     {
-      url: `${siteConfig.url}/audit`,
+      url: `${siteConfig.url}/roi-calculator`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.9,
+    },
+    {
+      url: `${siteConfig.url}/time-recovery-audit`,
       lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.9,

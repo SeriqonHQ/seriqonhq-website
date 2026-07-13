@@ -33,8 +33,8 @@ export function Hero() {
             <Button href="/voice" size="lg">
               Learn About Seriqon Voice
             </Button>
-            <Button href="/demo" variant="secondary" size="lg">
-              Try Live Demo
+            <Button href="/roi-calculator" variant="secondary" size="lg">
+              ROI Calculator
             </Button>
           </div>
 

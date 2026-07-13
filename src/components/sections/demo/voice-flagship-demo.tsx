@@ -355,7 +355,7 @@ export function VoiceFlagshipDemo({ playKey = 0 }: VoiceFlagshipDemoProps) {
             Imagine every missed call ending like this.
           </h2>
           <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
-            <Button href="/audit" size="lg">
+            <Button href="/time-recovery-audit" size="lg">
               Take Time Recovery Audit
             </Button>
             <Button href="/book" variant="secondary" size="lg">

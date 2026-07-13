@@ -630,7 +630,7 @@ export function VoiceCalculator() {
               opportunities, and free your team to focus on what matters most.
             </p>
             <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
-              <Button href="/audit" size="lg">
+              <Button href="/time-recovery-audit" size="lg">
                 Take Time Recovery Audit
               </Button>
               <Button href="/demo" variant="secondary" size="lg">

@@ -47,7 +47,7 @@ export function AnalyticsTracker() {
       trackHomepageViewed();
     }
 
-    if (pathname === "/audit") {
+    if (pathname === "/time-recovery-audit") {
       trackAuditStarted();
     }
 
